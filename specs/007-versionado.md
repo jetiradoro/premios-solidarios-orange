@@ -4,14 +4,13 @@
 
 ## Fuente de la versión
 - La versión de la app es el campo `version` de `package.json` (semver `MAJOR.MINOR.PATCH`). No se duplica en ningún otro sitio.
-- Se muestra en dos sitios de la home: en el header, antes de "Votos del …" (`v1.2.1 · Votos del 16 oct`), y en el pie, junto al recuento de candidaturas (`v1.2.1`, `text-xs text-muted`). Se resuelve en build importando `package.json` en `index.astro`; no hay JS en cliente.
+- Se muestra en dos sitios de la home: en el header, antes de "Votos del …" (`v1.2.0 · Votos del 16 oct`), y en el pie, junto al recuento de candidaturas (`v1.2.0`, `text-xs text-muted`). Se resuelve en build importando `package.json` en `index.astro`; no hay JS en cliente.
 
 ## Historial de versiones
 | Versión | Fecha | Commit | Contenido |
 |---|---|---|---|
 | 1.0.0 | 2026-10-16 | `c7e7618` (first version) | Primera versión: specs 001–005, buscador, Docker |
-| 1.2.0 | 2026-10-16 | `7b98d56` | Favoritos ([006](006-favoritos.md)) |
-| 1.2.1 | 2026-10-16 | — | Versión también en el header |
+| 1.2.0 | 2026-10-16 | `7b98d56` | Favoritos ([006](006-favoritos.md)), versión en header y pie |
 
 La numeración salta de 1.0.0 a 1.2.0 de forma deliberada.
 

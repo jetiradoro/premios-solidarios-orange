@@ -51,6 +51,8 @@ PWA instalable (Astro + Tailwind v4) que hace de *wrapper* de https://voluntaria
    - el cliente solo hace 3 peticiones por refresco;
    - nunca se envían votos desde la app.
 
+9. **Versionado:** todo cambio de comportamiento sube `version` en `package.json` y añade su entrada en `CHANGELOG.md` (ver `specs/007-versionado.md`).
+
 ## Flujo de trabajo con agentes
 - **Una tarea de `specs/tasks.md` cada vez:** impleméntala, verifícala con el criterio que indica, márcala `[x]` y haz commit.
 - **Exploración amplia:** usa un subagente de exploración y devuelve solo las conclusiones.

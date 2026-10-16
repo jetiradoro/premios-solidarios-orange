@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import CategorySection from '../components/CategorySection.astro';
 import SyncButton from '../components/SyncButton.astro';
 import { categories, projects, snapshot } from '../lib/data';
+import pkg from '../../package.json';
 
 const updated = new Intl.DateTimeFormat('es-ES', {
 	day: 'numeric',
@@ -91,7 +92,7 @@ const updated = new Intl.DateTimeFormat('es-ES', {
 		{categories.map((c) => <CategorySection category={c} />)}
 
 		<p class="px-4 py-6 text-center text-xs text-muted">
-			{projects.length} candidaturas · Datos de voluntariado.masorange.es
+			{projects.length} candidaturas · Datos de voluntariado.masorange.es · v{pkg.version}
 		</p>
 	</main>
 </Base>

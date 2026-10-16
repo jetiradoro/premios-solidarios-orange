@@ -28,6 +28,7 @@ src/lib/sanitize.ts     # lista blanca de HTML
 src/lib/storage.ts      # wrappers seguros de localStorage
 src/lib/votes.ts        # fetch de votos, caché y reordenado de la home
 src/lib/project-sync.ts # sync del detalle + overrides
+src/lib/favorites.ts    # favoritos: favorites:v1 y sección destacada de la home
 src/lib/ptr.ts          # pull-to-refresh
 src/lib/types.ts        # tipos de 002-data-model
 src/data/{categories,projects,votes}.json
@@ -49,6 +50,8 @@ deploy/default.conf   # nginx del contenedor (ver Dockerfile y docker-compose.ym
 3. **Sync en la home** (botón o pull-to-refresh): repite el paso 2.3.
 4. **Carga del detalle:** se aplica el override `project:v1:{id}` si existe y se pintan los votos de la caché.
 5. **Sync en el detalle:** `fetch` de `/remote/candidatura/{slug}/` y `parseDetail`, que actualizan el override, los votos y el DOM.
+
+6. **Favoritos** ([006](006-favoritos.md)): la estrella guarda el id en `favorites:v1` y `renderFavorites()` clona las filas marcadas (con su puesto, ya ordenado por votos) en la sección superior. `applyVotes` la llama al final, así que cada sync la deja al día.
 
 ## Pintado de los overrides
 Los elementos editables del detalle llevan `data-field="title|entity|logo|image|content|data|votes"`. `project-sync.ts` los actualiza con funciones de render pequeñas: `DataGrid` tiene una versión equivalente en TS y su HTML se sanea.

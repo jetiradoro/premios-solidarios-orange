@@ -9,6 +9,7 @@ Especificaciones del proyecto. Flujo **spec-first**: antes de implementar o camb
 | [003-scraping.md](003-scraping.md) | URLs, selectores, parser compartido y regeneración de datos |
 | [004-ui.md](004-ui.md) | Pantallas, componentes y tokens de diseño |
 | [005-pwa-offline.md](005-pwa-offline.md) | Manifest, service worker, caché y despliegue con nginx |
+| [006-favoritos.md](006-favoritos.md) | Proyectos favoritos con estrella y sección destacada en la home |
 | [plan.md](plan.md) | Plan de implementación |
 | [tasks.md](tasks.md) | Tareas ordenadas con criterios de verificación |
 

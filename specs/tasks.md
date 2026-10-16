@@ -68,3 +68,7 @@ Marca `[x]` al completar. Cada tarea incluye cómo verificarla. Orden recomendad
   *Verificado:* la imagen se construye; en contenedor, la home y el detalle dan 200, `/remote/candidaturas/educacion-digital/` devuelve 33 tarjetas, `POST` da 403 y `/remote/wp-json/` da 404.
 - [ ] **T7.2 · Publicar en el VPS.** Definir `SOLIDARIOS_HOST`, apuntar el dominio y ejecutar `docker compose up -d --build`.
   *Verificar:* la URL pública carga por HTTPS, se puede instalar la PWA y los votos se actualizan.
+
+## 8. Favoritos
+- [x] **T8.1 · Estrella y sección de favoritos.** Spec [006](006-favoritos.md): `src/lib/favorites.ts`, estrella en `ProjectRow` y sección destacada con el puesto en la categoría.
+  *Verificar:* marcar una estrella crea la copia arriba con "Puesto N de M"; persiste al recargar; tras un sync se actualiza el puesto; el buscador no cuenta las copias; `check` y `build` sin errores.

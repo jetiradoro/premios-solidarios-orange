@@ -13,24 +13,25 @@ const { project, rank } = Astro.props;
 <li
 	data-project={project.id}
 	data-category={project.category}
-	class="scroll-mt-[calc(var(--stack-h)+3rem)] data-match:bg-brand/15 data-current:bg-brand/25"
+	class="flex items-stretch scroll-mt-[calc(var(--stack-h)+3rem)] data-match:bg-brand/15 data-current:bg-brand/25"
 >
 	<a
 		href={`/proyecto/${project.slug}/`}
-		class="flex min-h-16 items-center gap-3 px-4 py-2.5 active:bg-surface sm:hover:bg-surface"
+		class="flex min-h-16 min-w-0 flex-1 items-center gap-3 py-2.5 pr-1 pl-4 active:bg-surface sm:hover:bg-surface"
 	>
 		<span class="relative">
 			<Logo logo={project.logo} entity={project.entity} />
 			<span
 				data-rank-badge
 				hidden={rank > 3}
-				class="absolute -top-1.5 -left-1.5 grid size-5 place-items-center rounded-full bg-brand text-[11px] leading-none font-extrabold text-black ring-2 ring-bg"
+				class="absolute -top-1.5 -left-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-brand px-1 text-[11px] leading-none font-extrabold text-black ring-2 ring-bg"
 				aria-label={`Puesto ${rank}`}>{rank}</span
 			>
 		</span>
 		<span class="min-w-0 flex-1">
 			<span data-s-title class="line-clamp-2 text-[15px] leading-snug font-semibold text-fg">{project.title}</span>
 			<span data-s-entity class="mt-0.5 block truncate text-xs text-muted">{project.entity}</span>
+			<span data-fav-rank hidden class="mt-0.5 line-clamp-2 text-xs font-semibold text-fg"></span>
 		</span>
 		<span class="shrink-0 text-right">
 			<span data-votes={project.id} class="block text-base leading-tight font-bold text-fg tabular-nums">
@@ -39,4 +40,15 @@ const { project, rank } = Astro.props;
 			<span class="block text-[11px] text-muted">votos</span>
 		</span>
 	</a>
+	<button
+		type="button"
+		data-fav-toggle
+		aria-pressed="false"
+		aria-label="Añadir a favoritos"
+		class="group grid w-12 shrink-0 place-items-center text-muted active:bg-surface aria-pressed:text-brand-dark focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand"
+	>
+		<svg viewBox="0 0 24 24" class="size-6 fill-none group-aria-pressed:fill-brand" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
+			<path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"></path>
+		</svg>
+	</button>
 </li>

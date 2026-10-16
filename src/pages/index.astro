@@ -78,6 +78,16 @@ const updated = new Intl.DateTimeFormat('es-ES', {
 			</nav>
 		</div>
 
+		<section data-favorites hidden class="scroll-mt-[calc(var(--stack-h)+0.5rem)]">
+			<h2
+				class="sticky top-[calc(env(safe-area-inset-top,0px)+var(--stack-h))] z-10 flex items-baseline justify-between gap-3 border-y border-line bg-surface px-4 py-2"
+			>
+				<span class="text-sm font-bold tracking-wide text-fg uppercase">★ Favoritos</span>
+				<span data-fav-count class="shrink-0 text-xs text-muted tabular-nums"></span>
+			</h2>
+			<ul data-fav-list class="divide-y divide-line"></ul>
+		</section>
+
 		{categories.map((c) => <CategorySection category={c} />)}
 
 		<p class="px-4 py-6 text-center text-xs text-muted">
@@ -87,6 +97,7 @@ const updated = new Intl.DateTimeFormat('es-ES', {
 </Base>
 
 <script>
+	import { initFavorites } from '../lib/favorites';
 	import { initPullToRefresh } from '../lib/ptr';
 	import { initSearch } from '../lib/search';
 	import { showToast } from '../lib/toast';
@@ -123,6 +134,7 @@ const updated = new Intl.DateTimeFormat('es-ES', {
 	document.querySelector('[data-sync="votes"]')?.addEventListener('click', () => sync(true));
 	initPullToRefresh(() => sync(true));
 	initSearch();
+	initFavorites();
 
 	// Volver desde un detalle (bfcache) o desde otra app: reaplicar y refrescar si hace tiempo.
 	addEventListener('pageshow', (e) => {

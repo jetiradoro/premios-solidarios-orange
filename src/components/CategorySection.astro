@@ -10,7 +10,7 @@ const { category } = Astro.props;
 const list = rankedByCategory(category.slug);
 ---
 
-<section id={category.slug} data-category-section={category.slug} class="scroll-mt-[calc(var(--stack-h)+0.5rem)]">
+<section id={category.slug} data-category-section={category.slug} data-category-name={category.name} class="scroll-mt-[calc(var(--stack-h)+0.5rem)]">
 	<h2
 		class="sticky top-[calc(env(safe-area-inset-top,0px)+var(--stack-h))] z-10 flex items-baseline justify-between gap-3 border-y border-line bg-surface px-4 py-2"
 	>

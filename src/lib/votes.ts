@@ -1,4 +1,5 @@
 import baseSnapshot from '../data/votes.json';
+import { renderFavorites } from './favorites';
 import { parseCategory, type El } from './parse';
 import { CATEGORIES } from './selectors';
 import { readJson, writeJson } from './storage';
@@ -80,6 +81,7 @@ export function applyVotes(snapshot: VotesSnapshot, opts: { animate?: boolean } 
 		});
 	});
 
+	renderFavorites();
 	updateRank(snapshot);
 }
 

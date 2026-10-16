@@ -46,6 +46,7 @@ type VotesSnapshot = { updatedAt: string; votes: Record<string, number> }; // cl
 | Clave | Valor | Uso |
 |---|---|---|
 | `votes:v1` | `VotesSnapshot` | Últimos votos conocidos. Se pintan al cargar, antes de la red. |
+| `favorites:v1` | `number[]` | Ids de los proyectos favoritos ([006](006-favoritos.md)). |
 | `project:v1:{id}` | `Partial<Project> & { syncedAt: string }` | Override tras el sync del detalle. Se combina con el JSON al cargar. |
 
 ### Reglas

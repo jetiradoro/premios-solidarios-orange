@@ -20,7 +20,7 @@ const updated = new Intl.DateTimeFormat('es-ES', {
 			<div class="min-w-0">
 				<h1 class="truncate text-xl leading-tight font-extrabold">Premios Solidarios 2026</h1>
 				<p class="truncate text-xs font-medium text-black/75">
-					Votos <span data-updated data-updated-at={snapshot.updatedAt}>del {updated}</span>
+					<span class="tabular-nums">v{pkg.version}</span> · Votos <span data-updated data-updated-at={snapshot.updatedAt}>del {updated}</span>
 				</p>
 			</div>
 			<SyncButton label="Actualizar votos" action="votes" />

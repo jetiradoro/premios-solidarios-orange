@@ -72,3 +72,7 @@ Marca `[x]` al completar. Cada tarea incluye cómo verificarla. Orden recomendad
 ## 8. Favoritos
 - [x] **T8.1 · Estrella y sección de favoritos.** Spec [006](006-favoritos.md): `src/lib/favorites.ts`, estrella en `ProjectRow` y sección destacada con el puesto en la categoría.
   *Verificar:* marcar una estrella crea la copia arriba con "Puesto N de M"; persiste al recargar; tras un sync se actualiza el puesto; el buscador no cuenta las copias; `check` y `build` sin errores.
+
+## 9. Versionado y changelog
+- [x] **T9.1 · Changelog y versión visible.** Spec [007](007-versionado.md): `CHANGELOG.md`, `version` 1.2.0 en `package.json` y `vX.Y.Z` en el pie de la home.
+  *Verificar:* `dist/index.html` contiene `v1.2.0`; `check` y `build` sin errores.

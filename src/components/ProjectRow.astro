@@ -1,0 +1,42 @@
+---
+import Logo from './Logo.astro';
+import { formatVotes, votesOf } from '../lib/data';
+import type { Project } from '../lib/types';
+
+interface Props {
+	project: Project;
+	rank: number;
+}
+const { project, rank } = Astro.props;
+---
+
+<li
+	data-project={project.id}
+	data-category={project.category}
+	class="scroll-mt-[calc(var(--stack-h)+3rem)] data-match:bg-brand/15 data-current:bg-brand/25"
+>
+	<a
+		href={`/proyecto/${project.slug}/`}
+		class="flex min-h-16 items-center gap-3 px-4 py-2.5 active:bg-surface sm:hover:bg-surface"
+	>
+		<span class="relative">
+			<Logo logo={project.logo} entity={project.entity} />
+			<span
+				data-rank-badge
+				hidden={rank > 3}
+				class="absolute -top-1.5 -left-1.5 grid size-5 place-items-center rounded-full bg-brand text-[11px] leading-none font-extrabold text-black ring-2 ring-bg"
+				aria-label={`Puesto ${rank}`}>{rank}</span
+			>
+		</span>
+		<span class="min-w-0 flex-1">
+			<span data-s-title class="line-clamp-2 text-[15px] leading-snug font-semibold text-fg">{project.title}</span>
+			<span data-s-entity class="mt-0.5 block truncate text-xs text-muted">{project.entity}</span>
+		</span>
+		<span class="shrink-0 text-right">
+			<span data-votes={project.id} class="block text-base leading-tight font-bold text-fg tabular-nums">
+				{formatVotes(votesOf(project.id))}
+			</span>
+			<span class="block text-[11px] text-muted">votos</span>
+		</span>
+	</a>
+</li>

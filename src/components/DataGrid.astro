@@ -1,0 +1,21 @@
+---
+import { shortLabel, wideFlags } from '../lib/datagrid';
+import type { DataItem } from '../lib/types';
+
+interface Props {
+	items: DataItem[];
+}
+const { items } = Astro.props;
+const wide = wideFlags(items);
+---
+
+<dl data-field="data" class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line">
+	{
+		items.map((item, i) => (
+			<div class:list={['bg-bg px-3.5 py-3', wide[i] && 'col-span-2']}>
+				<dt class="text-[11px] font-semibold tracking-wide text-muted uppercase">{shortLabel(item.label)}</dt>
+				<dd class="mt-0.5 text-sm leading-snug font-semibold text-fg [overflow-wrap:anywhere]">{item.value}</dd>
+			</div>
+		))
+	}
+</dl>

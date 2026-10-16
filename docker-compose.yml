@@ -1,0 +1,15 @@
+# Se publica a través del nginx-proxy del VPS (red externa docker-net).
+# Antes: cp .env.example .env  y  poner el dominio en SOLIDARIOS_HOST.
+services:
+  solidarios:
+    build: .
+    container_name: solidarios
+    restart: always
+    environment:
+      VIRTUAL_HOST: ${SOLIDARIOS_HOST:?Define SOLIDARIOS_HOST en .env}
+    networks:
+      - docker-net
+
+networks:
+  docker-net:
+    external: true

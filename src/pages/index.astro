@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import CategorySection from '../components/CategorySection.astro';
+import SyncButton from '../components/SyncButton.astro';
+import { categories, projects, snapshot } from '../lib/data';
+
+const updated = new Intl.DateTimeFormat('es-ES', {
+	day: 'numeric',
+	month: 'short',
+	hour: '2-digit',
+	minute: '2-digit',
+	timeZone: 'Europe/Madrid',
+}).format(new Date(snapshot.updatedAt));
+---
+
+<Base title="Premios Solidarios Orange 2026">
+	<div class="sticky top-[env(safe-area-inset-top,0px)] z-30">
+		<header class="flex h-(--header-h) items-center justify-between gap-3 bg-brand px-4 text-black">
+			<div class="min-w-0">
+				<h1 class="truncate text-xl leading-tight font-extrabold">Premios Solidarios 2026</h1>
+				<p class="truncate text-xs font-medium text-black/75">
+					Votos <span data-updated data-updated-at={snapshot.updatedAt}>del {updated}</span>
+				</p>
+			</div>
+			<SyncButton label="Actualizar votos" action="votes" />
+		</header>
+		<div class="flex h-(--search-h) items-center gap-1 border-b border-line bg-bg px-4">
+			<input
+				type="search"
+				data-search-input
+				aria-label="Buscar por título o entidad"
+				placeholder="Buscar por título o entidad"
+				enterkeyhint="search"
+				autocomplete="off"
+				autocapitalize="off"
+				spellcheck="false"
+				class="h-11 min-w-0 flex-1 rounded-full border border-line bg-surface px-4 text-base text-fg placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand"
+			/>
+			<span data-search-count hidden aria-live="polite" class="shrink-0 px-1 text-xs text-muted tabular-nums"></span>
+			<div data-search-nav hidden class="flex shrink-0">
+				<button
+					type="button"
+					data-search-prev
+					aria-label="Coincidencia anterior"
+					class="grid size-11 place-items-center rounded-full text-fg active:bg-surface focus-visible:outline-2 focus-visible:outline-brand"
+				>
+					<svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 15 6-6 6 6"></path></svg>
+				</button>
+				<button
+					type="button"
+					data-search-next
+					aria-label="Coincidencia siguiente"
+					class="grid size-11 place-items-center rounded-full text-fg active:bg-surface focus-visible:outline-2 focus-visible:outline-brand"
+				>
+					<svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<main>
+		<div class="px-4 pt-4 pb-3">
+			<p class="text-sm text-muted">
+				Votación abierta del 16 al 30 de octubre. Los tres proyectos con más apoyos de cada categoría pasan a la
+				siguiente fase.
+			</p>
+			<nav aria-label="Categorías" class="mt-3 grid grid-cols-3 gap-2">
+				{
+					categories.map((c) => (
+						<a
+							href={`#${c.slug}`}
+							class="grid min-h-11 place-items-center rounded-xl border border-line bg-surface px-2 py-2 text-center text-xs leading-tight font-medium text-fg active:bg-line"
+						>
+							{c.name}
+						</a>
+					))
+				}
+			</nav>
+		</div>
+
+		{categories.map((c) => <CategorySection category={c} />)}
+
+		<p class="px-4 py-6 text-center text-xs text-muted">
+			{projects.length} candidaturas · Datos de voluntariado.masorange.es
+		</p>
+	</main>
+</Base>
+
+<script>
+	import { initPullToRefresh } from '../lib/ptr';
+	import { initSearch } from '../lib/search';
+	import { showToast } from '../lib/toast';
+	import { applyVotes, currentVotes, refreshVotes, setLoading, setUpdated } from '../lib/votes';
+
+	let busy = false;
+	let lastSync = 0;
+
+	async function sync(manual: boolean) {
+		if (busy) return;
+		busy = true;
+		setLoading(true);
+		try {
+			const { snapshot, failed } = await refreshVotes();
+			applyVotes(snapshot, { animate: true });
+			setUpdated(snapshot.updatedAt);
+			lastSync = Date.now();
+			if (failed) showToast('Algunas categorías no se han podido actualizar');
+			else if (manual) showToast('Votos actualizados');
+		} catch {
+			showToast('Sin conexión, mostrando los últimos votos');
+		} finally {
+			busy = false;
+			setLoading(false);
+		}
+	}
+
+	// Primero lo guardado; después la red.
+	const cached = currentVotes();
+	applyVotes(cached);
+	setUpdated(cached.updatedAt);
+	sync(false);
+
+	document.querySelector('[data-sync="votes"]')?.addEventListener('click', () => sync(true));
+	initPullToRefresh(() => sync(true));
+	initSearch();
+
+	// Volver desde un detalle (bfcache) o desde otra app: reaplicar y refrescar si hace tiempo.
+	addEventListener('pageshow', (e) => {
+		if (e.persisted) applyVotes(currentVotes());
+	});
+	document.addEventListener('visibilitychange', () => {
+		if (document.visibilityState === 'visible' && Date.now() - lastSync > 60_000) sync(false);
+	});
+</script>

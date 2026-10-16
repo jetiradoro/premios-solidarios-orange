@@ -1,0 +1,20 @@
+[
+	{
+		"slug": "compromiso-con-el-medio-ambiente",
+		"name": "Compromiso con el medio ambiente",
+		"url": "https://voluntariado.masorange.es/candidaturas/compromiso-con-el-medio-ambiente/",
+		"order": 0
+	},
+	{
+		"slug": "educacion-digital",
+		"name": "Educación digital",
+		"url": "https://voluntariado.masorange.es/candidaturas/educacion-digital/",
+		"order": 1
+	},
+	{
+		"slug": "tecnologia-con-proposito",
+		"name": "Tecnología con propósito",
+		"url": "https://voluntariado.masorange.es/candidaturas/tecnologia-con-proposito/",
+		"order": 2
+	}
+]

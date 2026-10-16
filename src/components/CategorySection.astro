@@ -1,0 +1,23 @@
+---
+import ProjectRow from './ProjectRow.astro';
+import { rankedByCategory } from '../lib/data';
+import type { Category } from '../lib/types';
+
+interface Props {
+	category: Category;
+}
+const { category } = Astro.props;
+const list = rankedByCategory(category.slug);
+---
+
+<section id={category.slug} data-category-section={category.slug} class="scroll-mt-[calc(var(--stack-h)+0.5rem)]">
+	<h2
+		class="sticky top-[calc(env(safe-area-inset-top,0px)+var(--stack-h))] z-10 flex items-baseline justify-between gap-3 border-y border-line bg-surface px-4 py-2"
+	>
+		<span class="text-sm font-bold tracking-wide text-fg uppercase">{category.name}</span>
+		<span class="shrink-0 text-xs text-muted tabular-nums">{list.length} proyectos</span>
+	</h2>
+	<ul data-list class="divide-y divide-line">
+		{list.map((project, i) => <ProjectRow project={project} rank={i + 1} />)}
+	</ul>
+</section>

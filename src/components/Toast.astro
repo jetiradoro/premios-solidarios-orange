@@ -1,0 +1,25 @@
+<div
+	data-toast
+	role="status"
+	aria-live="polite"
+	hidden
+	class="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[calc(env(safe-area-inset-bottom,0px)+1rem)]"
+>
+	<p class="max-w-sm rounded-full bg-neutral-900 px-4 py-2.5 text-center text-sm font-medium text-white shadow-lg dark:bg-neutral-100 dark:text-neutral-900"></p>
+</div>
+
+<script>
+	import { TOAST_EVENT } from '../lib/toast';
+
+	const root = document.querySelector<HTMLElement>('[data-toast]');
+	const text = root?.querySelector('p');
+	let timer: number | undefined;
+
+	window.addEventListener(TOAST_EVENT, (e) => {
+		if (!root || !text) return;
+		text.textContent = (e as CustomEvent<string>).detail;
+		root.hidden = false;
+		clearTimeout(timer);
+		timer = window.setTimeout(() => (root.hidden = true), 3000);
+	});
+</script>

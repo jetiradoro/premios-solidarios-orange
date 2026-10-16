@@ -1,0 +1,24 @@
+---
+import { initials } from '../lib/data';
+
+interface Props {
+	logo?: string;
+	entity: string;
+	size?: 'md' | 'lg';
+}
+const { logo, entity, size = 'md' } = Astro.props;
+const box = size === 'lg' ? 'size-14' : 'size-11';
+---
+
+<span
+	data-logo
+	class:list={[box, 'grid shrink-0 place-items-center overflow-hidden rounded-lg border border-line bg-white']}
+>
+	{
+		logo ? (
+			<img src={logo} alt="" loading="lazy" decoding="async" class="size-full object-contain p-1" />
+		) : (
+			<span class="text-sm font-bold text-neutral-500">{initials(entity)}</span>
+		)
+	}
+</span>

@@ -1,0 +1,29 @@
+---
+interface Props {
+	label: string;
+	action: 'votes' | 'project';
+}
+const { label, action } = Astro.props;
+---
+
+<button
+	type="button"
+	data-sync={action}
+	aria-label={label}
+	title={label}
+	class="group grid size-11 shrink-0 place-items-center rounded-full bg-black/10 text-black transition-colors active:bg-black/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:opacity-60"
+>
+	<svg
+		viewBox="0 0 24 24"
+		class="size-5 group-[[data-loading]]:animate-spin motion-reduce:group-[[data-loading]]:animate-none"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2.2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<path d="M20 11a8 8 0 0 0-14.9-3M4 5v4h4"></path>
+		<path d="M4 13a8 8 0 0 0 14.9 3M20 19v-4h-4"></path>
+	</svg>
+</button>

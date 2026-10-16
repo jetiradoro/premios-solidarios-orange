@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/* Tokens de color: claro por defecto, oscuro con prefers-color-scheme (ver specs/004-ui.md) */
+:root {
+	--bg: #ffffff;
+	--surface: #f5f5f5;
+	--text: #111111;
+	--text-muted: #595959;
+	--border: #e5e5e5;
+	--header-h: 4.25rem;
+	--search-h: 3.5rem;
+	--stack-h: calc(var(--header-h) + var(--search-h));
+	color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #0b0b0b;
+		--surface: #1a1a1a;
+		--text: #f2f2f2;
+		--text-muted: #a3a3a3;
+		--border: #2e2e2e;
+	}
+}
+
+@theme inline {
+	--color-brand: #ff7900;
+	--color-brand-dark: #cc5f00;
+	--color-bg: var(--bg);
+	--color-surface: var(--surface);
+	--color-fg: var(--text);
+	--color-muted: var(--text-muted);
+	--color-line: var(--border);
+	--font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+	html {
+		-webkit-text-size-adjust: 100%;
+		overscroll-behavior-y: contain;
+	}
+	body {
+		background-color: var(--bg);
+		color: var(--text);
+		font-family: var(--font-sans);
+	}
+}
+
+/* Banda de la zona segura superior con el color de la cabecera (ver specs/004-ui.md) */
+body::before {
+	content: "";
+	position: fixed;
+	inset: 0 0 auto;
+	height: env(safe-area-inset-top, 0px);
+	z-index: 40;
+	background: var(--color-brand);
+}
+
+/* Texto enriquecido del detalle */
+.rich p + p,
+.rich ul,
+.rich ol {
+	margin-top: 0.75rem;
+}
+.rich ul {
+	list-style: disc;
+	padding-left: 1.25rem;
+}
+.rich ol {
+	list-style: decimal;
+	padding-left: 1.25rem;
+}
+.rich a {
+	color: var(--color-brand-dark);
+	text-decoration: underline;
+}
+@media (prefers-color-scheme: dark) {
+	.rich a {
+		color: var(--color-brand);
+	}
+}
+
+/* Destello al cambiar una cifra de votos */
+@keyframes vote-flash {
+	from {
+		color: var(--color-brand);
+		transform: scale(1.15);
+	}
+}
+.vote-changed {
+	animation: vote-flash 0.8s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+	.vote-changed {
+		animation: none;
+	}
+}
+
+/* Coincidencias del buscador de la home (ver specs/004-ui.md) */
+mark {
+	background-color: color-mix(in srgb, var(--color-brand) 45%, transparent);
+	color: inherit;
+	border-radius: 0.2em;
+	padding-inline: 0.1em;
+	margin-inline: -0.1em;
+}

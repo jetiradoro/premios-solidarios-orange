@@ -1,0 +1,225 @@
+---
+import Base from '../../layouts/Base.astro';
+import Logo from '../../components/Logo.astro';
+import SyncButton from '../../components/SyncButton.astro';
+import DataGrid from '../../components/DataGrid.astro';
+import { categories, formatVotes, projects, rankedByCategory, votesOf } from '../../lib/data';
+import type { Project } from '../../lib/types';
+
+export function getStaticPaths() {
+	return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+const { project } = Astro.props as { project: Project };
+const category = categories.find((c) => c.slug === project.category)!;
+const ranking = rankedByCategory(project.category);
+const rank = ranking.findIndex((p) => p.id === project.id) + 1;
+
+const isInvest = (label: string) => label.startsWith('¿En qué se invertirá');
+const facts = project.data.filter((d) => !isInvest(d.label));
+const invest = project.data.find((d) => isInvest(d.label));
+const plainLength = project.contentHtml.replace(/<[^>]+>/g, '').length;
+const synced = new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(
+	new Date(project.scrapedAt),
+);
+---
+
+<Base title={`${project.title} · Premios Solidarios`} description={project.entityFull ?? project.entity}>
+	<header
+		class="sticky top-[env(safe-area-inset-top,0px)] z-30 flex h-(--header-h) items-center gap-2 bg-brand px-2 text-black"
+	>
+		<a
+			href="/"
+			data-back
+			aria-label="Volver al listado"
+			class="grid size-11 shrink-0 place-items-center rounded-full active:bg-black/15 focus-visible:outline-2 focus-visible:outline-black"
+		>
+			<svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<path d="M15 5l-7 7 7 7"></path>
+			</svg>
+		</a>
+		<p class="min-w-0 flex-1 truncate text-base font-bold">{category.name}</p>
+		<SyncButton label="Actualizar proyecto" action="project" />
+	</header>
+
+	<main
+		data-project-page
+		data-id={project.id}
+		data-slug={project.slug}
+		data-category={project.category}
+		data-peers={JSON.stringify(ranking.map((p) => p.id))}
+		class="flex flex-col gap-5 px-4 pt-4 pb-10"
+	>
+		{
+			project.image && (
+				<img
+					data-field="image"
+					src={project.image}
+					alt=""
+					class="aspect-video w-full rounded-xl bg-surface object-cover"
+					decoding="async"
+					fetchpriority="high"
+				/>
+			)
+		}
+
+		<div class="flex flex-col gap-3">
+			<span class="self-start rounded-full bg-brand/15 px-3 py-1 text-xs font-bold text-brand-dark dark:text-brand">
+				{category.name}
+			</span>
+			<h1 data-field="title" class="text-2xl leading-tight font-extrabold text-balance">{project.title}</h1>
+			<div class="flex items-center gap-3">
+				<Logo logo={project.logo} entity={project.entity} size="lg" />
+				<p data-field="entity" class="min-w-0 text-sm leading-snug font-medium text-muted">
+					{project.entityFull ?? project.entity}
+				</p>
+			</div>
+		</div>
+
+		<section aria-label="Votos" class="flex items-center gap-4 rounded-xl border border-line bg-surface p-4">
+			<div class="min-w-0 flex-1">
+				<p class="text-3xl leading-none font-extrabold tabular-nums">
+					<span data-votes={project.id}>{formatVotes(votesOf(project.id))}</span>
+					<span class="text-sm font-semibold text-muted">votos</span>
+				</p>
+				<p class="mt-1.5 text-xs text-muted">
+					Puesto <span data-rank-text>{rank}</span> de <span data-rank-total>{ranking.length}</span> en {category.name}
+				</p>
+			</div>
+			<a
+				href={`${project.url}#votar`}
+				target="_blank"
+				rel="noopener noreferrer"
+				class="shrink-0 rounded-full bg-brand px-4 py-3 text-sm font-bold text-black active:bg-brand-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+			>
+				Votar en la web
+			</a>
+		</section>
+
+		{
+			facts.length > 0 && (
+				<section class="flex flex-col gap-2">
+					<h2 class="text-sm font-bold tracking-wide text-muted uppercase">Datos del proyecto</h2>
+					<DataGrid items={facts} />
+				</section>
+			)
+		}
+
+		{
+			project.contentHtml && (
+				<section class="flex flex-col gap-2">
+					<h2 class="text-sm font-bold tracking-wide text-muted uppercase">Descripción</h2>
+					<div
+						data-field="content"
+						data-clamp
+						data-clamp-needed={plainLength > 600}
+						class:list={['rich text-[15px] leading-relaxed [overflow-wrap:anywhere]', plainLength > 600 && 'line-clamp-6']}
+						set:html={project.contentHtml}
+					/>
+					{plainLength > 600 && (
+						<button type="button" data-clamp-toggle class="self-start py-2 text-sm font-bold text-brand-dark dark:text-brand">
+							Leer más
+						</button>
+					)}
+				</section>
+			)
+		}
+
+		{
+			invest && (
+				<details data-field="invest" class="group rounded-xl border border-line">
+					<summary class="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-bold">
+						¿En qué se invertirá el premio?
+						<svg viewBox="0 0 24 24" class="size-5 shrink-0 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+							<path d="M6 9l6 6 6-6"></path>
+						</svg>
+					</summary>
+					<div data-invest-body class="rich border-t border-line px-4 py-3 text-sm leading-relaxed [overflow-wrap:anywhere]" set:html={invest.html ?? invest.value} />
+				</details>
+			)
+		}
+
+		<div class="flex flex-col gap-3">
+			<button
+				type="button"
+				data-share
+				data-title={project.title}
+				class="min-h-12 rounded-full border border-line px-4 text-sm font-bold active:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+			>
+				Compartir proyecto
+			</button>
+			<p class="text-center text-xs text-muted">
+				Datos de <span data-synced>{synced}</span> ·
+				<a href={project.url} target="_blank" rel="noopener noreferrer" class="underline">Ver en la web original</a>
+			</p>
+		</div>
+	</main>
+</Base>
+
+<script>
+	import { applyOverride, loadOverride, syncProject } from '../../lib/project-sync';
+	import { showToast } from '../../lib/toast';
+	import { applyVotes, currentVotes, refreshVotes, setLoading } from '../../lib/votes';
+
+	const page = document.querySelector<HTMLElement>('[data-project-page]');
+	if (page) {
+		const id = Number(page.dataset.id);
+		const slug = page.dataset.slug ?? '';
+
+		// Primero lo guardado (override y votos); después la red.
+		const stored = loadOverride(id);
+		if (stored) applyOverride(stored);
+		applyVotes(currentVotes());
+		refreshVotes([page.dataset.category ?? ''])
+			.then(({ snapshot }) => applyVotes(snapshot, { animate: true }))
+			.catch(() => {});
+
+		let busy = false;
+		document.querySelector('[data-sync="project"]')?.addEventListener('click', async () => {
+			if (busy) return;
+			busy = true;
+			setLoading(true);
+			try {
+				applyOverride(await syncProject(id, slug));
+				applyVotes(currentVotes(), { animate: true });
+				showToast('Proyecto actualizado');
+			} catch {
+				showToast('No se pudo actualizar. Inténtalo de nuevo');
+			} finally {
+				busy = false;
+				setLoading(false);
+			}
+		});
+	}
+
+	// Volver: historial si venimos de la app, listado si no.
+	document.querySelector<HTMLAnchorElement>('[data-back]')?.addEventListener('click', (e) => {
+		const fromApp = history.length > 1 && document.referrer.startsWith(location.origin);
+		if (fromApp) {
+			e.preventDefault();
+			history.back();
+		}
+	});
+
+	// Descripción recortada con "Leer más".
+	const clamp = document.querySelector<HTMLElement>('[data-clamp]');
+	const toggle = document.querySelector<HTMLButtonElement>('[data-clamp-toggle]');
+	toggle?.addEventListener('click', () => {
+		const open = clamp?.classList.toggle('line-clamp-6') === false;
+		toggle.textContent = open ? 'Leer menos' : 'Leer más';
+		toggle.setAttribute('aria-expanded', String(open));
+	});
+
+	// Compartir con la hoja nativa o copiando el enlace.
+	document.querySelector<HTMLButtonElement>('[data-share]')?.addEventListener('click', async (e) => {
+		const title = (e.currentTarget as HTMLElement).dataset.title ?? document.title;
+		const url = location.href;
+		try {
+			if (navigator.share) return await navigator.share({ title, url });
+			await navigator.clipboard.writeText(url);
+			showToast('Enlace copiado');
+		} catch (err) {
+			if ((err as DOMException).name !== 'AbortError') showToast('No se pudo compartir');
+		}
+	});
+</script>

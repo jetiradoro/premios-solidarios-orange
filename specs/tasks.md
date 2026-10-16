@@ -66,5 +66,5 @@ Marca `[x]` al completar. Cada tarea incluye cómo verificarla. Orden recomendad
 ## 7. Despliegue con Docker
 - [x] **T7.1 · Contenedor.** `Dockerfile` en dos etapas, `.dockerignore` y `docker-compose.yml` en la red `docker-net` con `VIRTUAL_HOST` (ver [005](005-pwa-offline.md)).
   *Verificado:* la imagen se construye; en contenedor, la home y el detalle dan 200, `/remote/candidaturas/educacion-digital/` devuelve 33 tarjetas, `POST` da 403 y `/remote/wp-json/` da 404.
-- [ ] **T7.2 · Publicar en el VPS.** Definir `SOLIDARIOS_HOST`, apuntar el dominio y ejecutar `docker compose up -d --build`.
+- [x] **T7.2 · Publicar en el VPS.** Definir `SOLIDARIOS_HOST`, apuntar el dominio y ejecutar `docker compose up -d --build`.
   *Verificar:* la URL pública carga por HTTPS, se puede instalar la PWA y los votos se actualizan.
